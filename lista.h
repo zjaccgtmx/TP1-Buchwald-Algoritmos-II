@@ -1,3 +1,6 @@
+#ifndef LISTA_H
+#define LISTA_H
+
 #include <stdbool.h>
 
 /* ******************************************************************
@@ -126,3 +129,5 @@ bool lista_iter_insertar(lista_iter_t *iter, void *dato);
 // Pre: el iterador fue creado.
 // Post: la lista contiene un elemento menos.
 void *lista_iter_borrar(lista_iter_t *iter);
+
+#endif

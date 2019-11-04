@@ -1,32 +1,38 @@
 #define _POSIX_C_SOURCE 200809L 
 #include "cola.h"
 #include "lista.h"
+#include "grep.h"
 #include "rabinkarp.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <unistd.h>
 #include <string.h>
+#define TAM_MAX 90
+#define NUM_PRIMO 37
 
 /*
 gcc -g -std=c99 -Wall -Wtype-limits -pedantic -Wconversion -Wno-sign-conversion
 */
+
 void grep(FILE* archivo, const char* buscado,int n_contexto){
-    
     lista_t* lista = lista_crear();
     cola_t* cola = cola_crear();
     if (!lista || !cola){
         fprintf(stderr,"ERROR en grep.\n");
         return;
     }
-    
-    char linea[90];
-    while (fgets(linea,90,archivo) != NULL){
-        if (lista_largo(lista) >= n_contexto) lista_borrar_primero(lista);
-        lista_insertar_ultimo(lista,strdup(linea));
+    char linea[TAM_MAX];
+    while (fgets(linea,TAM_MAX,archivo) != NULL){
+        if (lista_largo(lista) > n_contexto){      // Si supera el número pedido de lineas de contexto,
+            lista_borrar_primero(lista); 
+        }
+        char* guardar = strdup((const char*)&linea);
+        lista_insertar_ultimo(lista,guardar);
 
-        if (search_rabinkarp(buscado,linea,37)>=0){
+        if (search_rabinkarp(buscado,linea,NUM_PRIMO)>=0){
             while (!lista_esta_vacia(lista)){
+                
                 cola_encolar(cola,lista_borrar_primero(lista));
             }
         }
@@ -40,8 +46,8 @@ void grep(FILE* archivo, const char* buscado,int n_contexto){
 
 int chequeo_contexto(char* argv[]){
     int lineas_previas = atoi(argv[2]);
-    if (lineas_previas < 0){
-        fprintf(stderr, "ERROR: '%d'. El valor debe ser mayor o igual a 0.\n",lineas_previas);
+    if (! __builtin_types_compatible_p(typeof(lineas_previas),int)){
+        fprintf(stderr, "Tipo de parametro incorrecto");
         return -1;
     }
     return lineas_previas;
@@ -49,7 +55,7 @@ int chequeo_contexto(char* argv[]){
 
 bool chequeo_parametros(int argc){
     if (argc < 3){
-        fprintf(stderr,"ERROR: La cantidad de parámetros es insuficiente.\n");
+        fprintf(stderr,"Cantidad de parametros erronea");
         return false;
     }
     return true;
@@ -78,7 +84,7 @@ int main(int argc, char* argv[]){
     const char* buscado = argv[1];
     int lineas_previas;
     if ((lineas_previas = chequeo_contexto(argv)) < 0)    return -1;
-        
+    
     grep(archivo,buscado,lineas_previas);
 
     if (archivo != stdin)   fclose(archivo);
