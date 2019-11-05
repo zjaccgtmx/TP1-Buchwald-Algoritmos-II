@@ -45,9 +45,13 @@ void grep(FILE* archivo, const char* buscado,int n_contexto){
 }
 
 int chequeo_contexto(char* argv[]){
-    int lineas_previas = atoi(argv[2]);
-    if (! __builtin_types_compatible_p(typeof(lineas_previas),int)){
-        fprintf(stderr, "Tipo de parametro incorrecto");
+    if (*argv[2] == '0'){ 
+        return atoi(argv[2]);
+    }
+    char* str;
+    int lineas_previas = (int) strtol(argv[2],&str,10); // 10: Base Decimal
+    if (lineas_previas == 0){
+        fprintf(stderr, "Tipo de parametro incorrecto\n");
         return -1;
     }
     return lineas_previas;
@@ -55,7 +59,7 @@ int chequeo_contexto(char* argv[]){
 
 bool chequeo_parametros(int argc){
     if (argc < 3){
-        fprintf(stderr,"Cantidad de parametros erronea");
+        fprintf(stderr,"Cantidad de parametros erronea\n");
         return false;
     }
     return true;
@@ -68,7 +72,7 @@ FILE* chequeo_archivo(int argc,char* argv[]){
     } else {
         const char* nombre = argv[3];
         if (!(archivo = fopen(nombre,"r"))){
-            fprintf(stderr,"ERROR: Archivo '%s' no pudo abrirse.\n",nombre);
+            fprintf(stderr,"No se pudo leer el archivo indicado\n");
             return NULL;
         }
     }
