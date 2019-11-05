@@ -5,9 +5,10 @@
 #include <unistd.h>
 #include <string.h>
 #include "funciones_dc.h"
+#include "pila.h"
 #include "dc.c"
 
-bool aritmetica(pila_t* pila, int operacion(int a, int b){
+bool aritmetica(pila_t* pila, int operacion(int a, int b)){
     char* a = pila_desapilar(pila);
     char* b = pila_desapilar(pila);
     if (!a || !b){
@@ -94,7 +95,7 @@ bool potencia(pila_t* pila){
         fprintf(stderr,"ERROR\n");
         return false;
     }
-    return pila_apilar(_pot(atoi(base),atoi(expo)));
+    return pila_apilar(pila,_pot(atoi(base),atoi(expo)));
 }
 
 int _pot(int base, int expo){
@@ -123,7 +124,7 @@ bool loga(pila_t* pila){
         fprintf(stderr,"ERROR\n");
         return false;
     }
-    return pila_apilar(_log(atoi(a),atoi(b)));
+    return pila_apilar(pila,_log(atoi(a),atoi(b)));
 }
 
 int _log(int arg, int base){
@@ -132,14 +133,19 @@ int _log(int arg, int base){
 }
 
 bool es_operador(char* str){
-    bool suma = strcmp(str,SUMA) == 0;
-    bool resta = strcmp(str,RESTA) == 0;
-    bool multip = strcmp(str,MULT) == 0;
-    bool division = strcmp(str,DIV) == 0;
-    bool raiz = strcmp(str,SQRT) == 0;
-    bool pot = strcmp(str,POT) == 0;
-    bool logs = strcmp(str,LOG) == 0;
-    bool tern = strcmp(str,TERN) == 0;
+
+    bool suma = str[0] == SUMA;
+    bool resta = str[0] == RESTA;
+    bool multip = str[0] == MULT;
+    bool division = str[0] == DIV;
+    bool pot = str[0] == POT;
+    bool tern = str[0] == TERN;
+
+    char raiz_c[10] = 'sqrt';
+    char logaritmo[10] = 'log';
+
+    bool raiz = strcmp(str,(const char*)&raiz_c) == 0;
+    bool logs = strcmp(str,(const char*)&logaritmo) == 0;
 
     return (suma || resta || multip || division || raiz || pot || logs || tern);
 }

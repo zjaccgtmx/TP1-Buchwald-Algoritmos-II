@@ -2,6 +2,7 @@
 #define FUNC_
 
 #include <stdbool.h>
+#include "pila.h"
 
 bool aritmetica(pila_t* pila, int operacion(int a, int b));
 

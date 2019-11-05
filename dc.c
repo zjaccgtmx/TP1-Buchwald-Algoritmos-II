@@ -20,7 +20,7 @@
 #define TERN '?'
 
 /*
-gcc -g -std=c99 -Wall -Wtype-limits -pedantic -Wconversion -Wno-sign-conversion
+gcc -g -std=c99 -Wall -Wtype-limits -pedantic -Wconversion -Wno-sign-conversion7
 */
 
 
@@ -33,25 +33,14 @@ bool _dc(pila_t* pila){
     if (!_dc(pila)) return false;
     if (!es_operador(desapilado))   pila_apilar(pila,atoi(desapilado));
 
-    char op = desapilado[0];
-    switch (op){
-        case SUMA:
-            return aritmetica(pila,sumar);
-        case RESTA:
-            return aritmetica(pila,restar);
-        case MULT:
-            return aritmetica(pila,multiplicar);
-        case DIV:
-            return aritmetica(pila,dividir);
-        case SQRT:
-            return raiz(pila);
-        case POT:
-            return potencia(pila);
-        case LOG:
-            return loga(pila);
-        case TERN:
-            return ternaria(pila);
-    }
+    if (desapilado == SUMA)     return aritmetica(pila,sumar);
+    if (desapilado == RESTA)    return aritmetica(pila,restar);
+    if (desapilado == MULT)     return aritmetica(pila,multiplicar);4
+    if (desapilado == DIV)      return aritmetica(pila,dividir);
+    if (desapilado == SQRT)     return raiz(pila);
+    if (desapilado == POT)      return potencia(pila);
+    if (desapilado == LOG)      return loga(pila);
+    if (desapilado == TERN)     return ternaria(pila);
     return false;
 }
 
@@ -89,7 +78,8 @@ int main(int argc, char* argv[]){
     char linea[TAM_MAX_LINEA];
     while(fgets(linea,TAM_MAX_LINEA,archivo) != NULL){
         pila_t* pila = pila_crear();
-        char** elems = split(linea," ");
+        char sep = " "
+        char** elems = split(linea,sep);
         int i = 0;
 
         while (elems[i] != NULL){
