@@ -23,54 +23,8 @@
 gcc -g -std=c99 -Wall -Wtype-limits -pedantic -Wconversion -Wno-sign-conversion
 */
 
-int main(int argc, char* argv[]){
 
-    FILE* archivo;
-    if (!(archivo = chequeo_archivo(argc, argv)))   return -1;
-        
-    char linea[TAM_MAX_LINEA];
-    while(fgets(linea,TAM_MAX_LINEA,archivo) != NULL){
-        pila_t* pila = pila_crear();
-        char** elems = split(linea," ");
-        int i = 0;
 
-        while (elems[i] != NULL){
-            pila_apilar(pila,elems[i]);
-        }
-        dc(pila);
-        free(elems);
-        pila_destruir(pila);
-    }
-
-    if (archivo != stdin)   fclose(archivo);
-    return 0;
-}
-
-FILE* chequeo_archivo(int argc,char* argv[]){
-    FILE* archivo;
-    if (argc == 1){
-        archivo = stdin;
-    } else {
-        const char* nombre = argv[1];
-        if (!(archivo = fopen(nombre,"r"))){
-            fprintf(stderr,"No se pudo leer el archivo indicado\n");
-            return NULL;
-        }
-    }
-    return archivo;
-}
-
-void dc(pila_t* pila){
-    if (pila_esta_vacia(pila))  return;
-    if (!_dc(pila)) return;
-    int* desap = pila_desapilar(pila);
-    if (!pila_esta_vacia(pila)){
-        fprintf(stderr,"ERROR\n");
-    } else {
-        fprintf(stdout,"%d\n",*(int*)desap);
-    }
-    return;
-}
 
 bool _dc(pila_t* pila){
     if (pila_esta_vacia(pila))  return true;
@@ -101,3 +55,51 @@ bool _dc(pila_t* pila){
     return false;
 }
 
+void dc(pila_t* pila){
+    if (pila_esta_vacia(pila))  return;
+    if (!_dc(pila)) return;
+    int* desap = pila_desapilar(pila);
+    if (!pila_esta_vacia(pila)){
+        fprintf(stderr,"ERROR\n");
+    } else {
+        fprintf(stdout,"%d\n",*(int*)desap);
+    }
+    return;
+}
+
+FILE* chequeo_archivo(int argc,char* argv[]){
+    FILE* archivo;
+    if (argc == 1){
+        archivo = stdin;
+    } else {
+        const char* nombre = argv[1];
+        if (!(archivo = fopen(nombre,"r"))){
+            fprintf(stderr,"No se pudo leer el archivo indicado\n");
+            return NULL;
+        }
+    }
+    return archivo;
+}
+
+int main(int argc, char* argv[]){
+
+    FILE* archivo;
+    if (!(archivo = chequeo_archivo(argc, argv)))   return -1;
+        
+    char linea[TAM_MAX_LINEA];
+    while(fgets(linea,TAM_MAX_LINEA,archivo) != NULL){
+        pila_t* pila = pila_crear();
+        char** elems = split(linea," ");
+        int i = 0;
+
+        while (elems[i] != NULL){
+            pila_apilar(pila,elems[i]);
+        }
+        dc(pila);
+        free(elems);
+        pila_destruir(pila);
+    }
+
+    if (archivo != stdin)   fclose(archivo);
+    return 0;
+}
