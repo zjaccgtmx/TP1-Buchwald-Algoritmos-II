@@ -22,6 +22,7 @@
 /*
 gcc -g -std=c99 -Wall -Wtype-limits -pedantic -Wconversion -Wno-sign-conversion
 */
+
 int main(int argc, char* argv[]){
 
     FILE* archivo;
@@ -32,11 +33,9 @@ int main(int argc, char* argv[]){
         pila_t* pila = pila_crear();
         char** elems = split(linea," ");
         int i = 0;
-        char elemento[TAM_MAX_ELEM];
 
         while (elems[i] != NULL){
-            elemento = strcpy(elems[i]);
-            pila_apilar(pila,elemento);
+            pila_apilar(pila,elems[i]);
         }
         dc(pila);
         free(elems);
@@ -75,12 +74,13 @@ void dc(pila_t* pila){
 
 bool _dc(pila_t* pila){
     if (pila_esta_vacia(pila))  return true;
-    char* desapilado(pila);
+    char* desapilado = pila_desapilar(pila);
     
     if (!_dc(pila)) return false;
     if (!es_operador(desapilado))   pila_apilar(pila,atoi(desapilado));
 
-    switch (desapilado){
+    char op = desapilado[0];
+    switch (op){
         case SUMA:
             return aritmetica(pila,sumar);
         case RESTA:

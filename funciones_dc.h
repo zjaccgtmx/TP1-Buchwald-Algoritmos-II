@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 
-bool aritmetica(pila_t* pila, (int)(operacion)(int a, int b));
+bool aritmetica(pila_t* pila, int operacion(int a, int b));
 
 int sumar(int a, int b);
 
